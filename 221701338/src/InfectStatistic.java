@@ -9,8 +9,9 @@ class InfectStatistic {
 	static String date = "";
 	static List<String> province = new ArrayList<String>();
 	static List<String> type = new ArrayList<String>();
-	static List<DataProcessing.InfectSituation>	handledList = new ArrayList<DataProcessing.InfectSituation>();
-    static class CommandLine {
+	static List<DataProcessing.InfectSituation>	
+	handledList = new ArrayList<DataProcessing.InfectSituation>();
+        static class CommandLine {
         static Command command;
         static Arguments arguments;
         static List<String> getList(String args[]){
@@ -677,16 +678,8 @@ class InfectStatistic {
     }
     public static void main(String[] args) throws IOException {
     	 List<String> list =new ArrayList<String>();
-    	 String[] arg = {"list","-date","2020-01-22", "-log" , "D:/log/","-out","D:/output.txt"};
-         list = CommandLine.getList(arg);
-         CommandLine.getCommandLine(list);/*
-         logPath="D:\\log\\2020-01-22.log.txt";
-         outPath="D:\\output.txt";
-         type.add("ip");
-         CommandLine.arguments.isType=true;
-         province.add("福建");
-         CommandLine.arguments.isProvince=true;*/
-         //date="2020-01-22";
+         list = CommandLine.getList(args);
+         CommandLine.getCommandLine(list);
          Tool.FileManager.sortProvince();
          DataOut.dataOutput();
     }
