@@ -369,18 +369,10 @@ class InfectStatistic {
             public static boolean compare(Object o1, Object o2) {
                 InfectSituation a = (InfectSituation) o1;
                 InfectSituation a2 = (InfectSituation) o2;
-
                 if (a.province.equals(a2.province)) {
                     return true;
                 }
                 return false;
-            }
-            static class comparator implements  Comparator {
-                public int compare(Object object1, Object object2) {
-                    InfectSituation a1 = (InfectSituation) object1; 
-                    InfectSituation a2 = (InfectSituation) object2;
-                    return a1.province.compareTo(a2.province);
-                }
             }
         }
         static List<DataProcessing.InfectSituation> dataGain(String str,List<DataProcessing.InfectSituation> infectList){
@@ -412,39 +404,25 @@ class InfectStatistic {
         }
         public static void sortProvince(){
             List<DataProcessing.InfectSituation> list = DataInput.dataInput(logPath);
-            System.out.println(list);
             List<DataProcessing.InfectSituation> sortedList = new ArrayList<DataProcessing.InfectSituation>();
             Comparator<Object> regular = Collator.getInstance(java.util.Locale.CHINA);
+            sortedList.add(list.get(0));
+            list.remove(0);
             String[] newList = new String[list.size()];
-            String temp = null;
-            for(int i = 0 ; i<= list.size()-1 ; i++){
-                if (list.get(i).province.equals("全国")){
-                    temp = list.get(i).province + " " + list.get(i).ip + " " + list.get(i).sp + " " + 
-                    		list.get(i).cure+ " " + list.get(i).dead;
-                }
+            for(int i = 0 ; i< list.size() ; i++){
                 newList[i] = list.get(i).toString();
             }
-            DataProcessing.InfectSituation wholeInfectSituation = new DataProcessing.InfectSituation();
-            String[] whole = temp.split(" ");
-            wholeInfectSituation.province = whole[0];
-            wholeInfectSituation.ip = Integer.parseInt(whole[1]);
-            wholeInfectSituation.sp = Integer.parseInt(whole[2]);
-            wholeInfectSituation.cure = Integer.parseInt(whole[3]);
-            wholeInfectSituation.dead=Integer.parseInt(whole[4]);
-            sortedList.add(wholeInfectSituation);
             Arrays.sort(newList,regular);
-            for(String infect:newList){
+            for(String nl : newList){
             	DataProcessing.InfectSituation infectSituation = new DataProcessing.InfectSituation();
-                String[] arr = infect.split(" ");
-                if(arr[0].equals("全国"))
-                    continue;
-                infectSituation.province = arr[0];
+            	String[] arr = nl.split(" ");
+            	infectSituation.province = arr[0];
                 infectSituation.ip = Integer.parseInt(arr[1]);
                 infectSituation.sp = Integer.parseInt(arr[2]);
                 infectSituation.cure = Integer.parseInt(arr[3]);
                 infectSituation.dead = Integer.parseInt(arr[4]);
                 sortedList.add(infectSituation);
-                }    
+            }
             handledList = sortedList;
         }
         public static List<String> getFiles(String path) {
@@ -481,7 +459,6 @@ class InfectStatistic {
                     	System.out.println(str);
                     }
                     reader.close();
-                    Collections.sort(infectList, new DataProcessing.ListProcessing.comparator());
                     int flag = 1;
                     if(!date.equals("default"))
                     {
@@ -493,7 +470,6 @@ class InfectStatistic {
                     }
                     if(flag1){
                     	 finalInfectList = DataProcessing.ListProcessing.mergeList(infectList);
-                    	 System.out.print(finalInfectList);
                     }
                    else{
                     	System.out.println("未找到指定日期文件");
@@ -519,7 +495,6 @@ class InfectStatistic {
                 	int pos1 = filePath.lastIndexOf('\\');
                 	int pos2 = filePath.indexOf(".");
                 	String name = filePath.substring(pos1+1, pos2);
-                	System.out.println(date);
                     System.out.println(name);
                     int flag = 1;
                     if(!date.equals("default"))
@@ -532,17 +507,15 @@ class InfectStatistic {
                     }
                     else
                     	continue;
-                    if(flag1)
+                    if(flag1){
                     	infectList1.addAll(dataInput(filePath));
+                    }
                     else{
                     	System.out.println("未找到指定日期文件");
                     	System.exit(0);
                     }
                 }
-
-                Collections.sort(infectList1, new DataProcessing.ListProcessing.comparator());
                 finalInfectList = DataProcessing.ListProcessing.mergeList(infectList1);
-                //finalInfectList = infectList1;
             }
             return finalInfectList;
         }
@@ -647,7 +620,8 @@ class InfectStatistic {
     }
     public static void main(String[] args) throws IOException {
     	 List<String> list =new ArrayList<String>();
-         list = CommandLine.getList(args);
+    	 String[] arg = Test.arg1;
+         list = CommandLine.getList(arg);
          CommandLine.getCommandLine(list);
          DataProcessing.sortProvince();
          DataOut.dataOutput();
