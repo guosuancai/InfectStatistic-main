@@ -351,10 +351,8 @@ class InfectStatistic {
                    			num.add(j);
                    		}
                    	}
-                   	int de = 0;
-                   	for(int n :num){
-                   		n -= de;
-                   		de++;
+                   	for(int i = 0; i < num.size();i ++ ){
+                   		int n= num.get(i) - i;
                    		infectList.remove(n);
                    	}
                    	for(int i = 0; i < num.size();i ++ ){
